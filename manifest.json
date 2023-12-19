@@ -9,17 +9,14 @@
     "permissions": [
       "activeTab"
     ],
-    "background": {
-      "scripts": ["background_scripts/background.js"]
-    },
     "content_scripts": [
       {
         "matches": ["https://chat.openai.com/c/*"],
-        "js": ["content_scripts/content.js"]
+        "js": ["content_scripts/content_script.js"] 
       }
     ],
     "browser_action": {
-      "default_popup": "popup/popup.html",
+      "default_popup": "popup/popup.html", 
       "default_icon": {
         "48": "icons/icon-48.png"
       }
