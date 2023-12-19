@@ -1,0 +1,28 @@
+{
+    "manifest_version": 2,
+    "name": "Chat Citation Generator",
+    "version": "1.0",
+    "description": "Generates BibLaTeX citations from chat conversations at OpenAI Chat.",
+    "icons": {
+      "48": "icons/icon-48.png"
+    },
+    "permissions": [
+      "activeTab"
+    ],
+    "background": {
+      "scripts": ["background_scripts/background.js"]
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://chat.openai.com/c/*"],
+        "js": ["content_scripts/content.js"]
+      }
+    ],
+    "browser_action": {
+      "default_popup": "popup/popup.html",
+      "default_icon": {
+        "48": "icons/icon-48.png"
+      }
+    }
+  }
+  
