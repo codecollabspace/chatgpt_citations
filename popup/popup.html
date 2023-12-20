@@ -33,13 +33,14 @@
         .hidden {
             display: none;
         }
-        div.citation {
-            max-height: 200px;
-            overflow: hidden;
+
+        textarea#citation {
+            max-height: 600px;
+            min-height: 400px;
+            min-width: 400px;
+            max-width: 400px;
+            overflow: auto;
         }
-
-
-
     </style>
 </head>
 <body>
@@ -55,11 +56,8 @@
     <p id="info_message" class="hidden"></p>
 
     <!-- The citation for each prompt will be displayed here-->
-    <div id="citation" class="hidden">  
-
-    </div>
-    
-
+    <button id="copy_citation" class="hidden">Copy Citation</button><br>
+    <textarea id="citation" class="hidden"></textarea>
 
 
     <script src="./popup.js"></script>

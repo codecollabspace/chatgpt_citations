@@ -1,10 +1,8 @@
   browser.runtime.onMessage.addListener((request, sender) => {
     if (request.action === "fetchPrompts") {
-        console.log("Fetching prompts action received");
         let prompts = getUserPrompts();
         return Promise.resolve({ prompts: prompts });
     } else if (request.action === "generateCitation") {
-        console.log("Generate citation action received");
         let citation = generateBibTeX(request.entry);
         return Promise.resolve({ citation: citation });
     }
@@ -61,7 +59,7 @@ function generateBibTeX(entries) {
 
         // Year
         if (entry.date) {
-            citation += `  date = {${entry.date}}\n`;
+            citation += `  date = {${entry.date}},\n`;
         }
 
         // URL

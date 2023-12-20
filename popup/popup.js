@@ -73,23 +73,31 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+
+
+
 function displayBibTexCitation(citationTexts) {
     // Display the generated citation in the popup
-    var citationDiv = document.getElementById("citation");
+    var citationTexarea = document.getElementById("citation");
 
-    if (citationDiv.classList.contains("hidden")) {
-        citationDiv.classList.remove("hidden");
+    
+    if (citationTexarea.classList.contains("hidden")) {
+        citationTexarea.classList.remove("hidden");
     }
 
+    // Display copy citation button
+    var copyButton = document.getElementById("copy_citation");
+    if (copyButton.classList.contains("hidden")) {
+        copyButton.classList.remove("hidden");
+    }
+    copyButton.addEventListener("click", copyCitation);
+
     // Clear the citation div
-    citationDiv.innerHTML = "";
+    citationTexarea.innerHTML = "";
 
     // Display the list of citations with a <br> tag between each citation
-
     citationTexts.forEach(citationText => {
-        let p = document.createElement("p");
-        p.textContent = citationText;
-        citationDiv.appendChild(p);
+        citationTexarea.innerHTML += citationText + "&#013;&#010;&#013;&#010;";
     });
     
 
@@ -184,4 +192,29 @@ function getUrlChatId(urlString) {
     console.error("Invalid URL:", e);
     return "";
   }
+}
+
+function copyCitation() {
+    var citationTextarea = document.getElementById("citation");
+    navigator.clipboard.writeText(citationTextarea.value)
+        .then(() => {
+            console.log('Citation copied to clipboard');
+            // Optionally, display a success message to the user
+        })
+        .catch(err => {
+            console.error('Error in copying text: ', err);
+        });
+}
+
+
+function copyCitation() {
+    var citationTextarea = document.getElementById("citation");
+    navigator.clipboard.writeText(citationTextarea.value)
+        .then(() => {
+            console.log('Citation copied to clipboard');
+            // Optionally, display a success message to the user
+        })
+        .catch(err => {
+            console.error('Error in copying text: ', err);
+        });
 }
