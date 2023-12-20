@@ -33,6 +33,10 @@
         .hidden {
             display: none;
         }
+        div.citation {
+            max-height: 200px;
+            overflow: hidden;
+        }
 
 
 
@@ -48,7 +52,7 @@
         <button id="generate_citation">Generate Citation</button>
     </form>
 
-    <p id="progress_message" class="hidden"></p>
+    <p id="info_message" class="hidden"></p>
 
     <!-- The citation for each prompt will be displayed here-->
     <div id="citation" class="hidden">  

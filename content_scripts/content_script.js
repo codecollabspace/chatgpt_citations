@@ -1,25 +1,16 @@
-// content_script.js
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.action === "fetchPrompts") {
-        // Logic to fetch prompts from the page's DOM
+  browser.runtime.onMessage.addListener((request, sender) => {
+    if (request.action === "fetchPrompts") {
+        console.log("Fetching prompts action received");
         let prompts = getUserPrompts();
-        // Send the prompts back to the popup
-        sendResponse({ prompts: prompts });
-        return true; // Required for asynchronous sendResponse
-      }
-
-      else if (request.action === "generateCitation") {
-        // Genertae bibTeX citation
+        return Promise.resolve({ prompts: prompts });
+    } else if (request.action === "generateCitation") {
+        console.log("Generate citation action received");
         let citation = generateBibTeX(request.entry);
-        // Send the citation back to the popup
-        sendResponse({ citation: citation });
-        return true; // Required for asynchronous sendResponse
-      }
+        return Promise.resolve({ citation: citation });
     }
-  );
-
-
+    return false;
+  });
+  
 
 function getUserPrompts() {
     let allUserPrompts = [];
@@ -42,8 +33,6 @@ function generateBibTeX(entries) {
 
     let allEntriesBibTeX = [];
 
-
-    console.log(entries);
     entries.forEach(entry => {
         // Check if it is a json object
         if (typeof entry !== "object") {
@@ -73,6 +62,11 @@ function generateBibTeX(entries) {
         // Year
         if (entry.date) {
             citation += `  date = {${entry.date}}\n`;
+        }
+
+        // URL
+        if (entry.url) {
+            citation += `  url = {${entry.url}}\n`;
         }
 
         // End the entry
