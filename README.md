@@ -11,18 +11,12 @@ The ChatGPT Citation Generator is a browser extension designed to generate BibTe
 ## How to Use
 1. Install the extension in your browser (Primarly developed and tested on Firefox).
 -  In Firefox:
-  - Go here about:debugging#/runtime/this-firefox
-  - Click on "Load Temporary Add-on" and select the manifest.json
+  -   Go here about:debugging#/runtime/this-firefox
+  -   Click on "Load Temporary Add-on" and select the manifest.json
 3. Open a chat session in ChatGPT.
 4. Click on the extension icon to generate citations.
 5. The extension will automatically extract the chat prompts and generate BibTeX citations.
 
-## Requirements
-- Compatible with most modern web browsers.
-- Requires internet access to work with the ChatGPT platform.
-
-## Installation
-(Currently under development. Installation instructions will be provided upon release.)
 
 ## Contributing
 Contributions to the project are welcome! If you have a bug to report or a feature to suggest, please open an issue in this repository.
@@ -30,9 +24,6 @@ Contributions to the project are welcome! If you have a bug to report or a featu
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
-## Acknowledgements
-- OpenAI for providing the ChatGPT platform.
-- All contributors and supporters of the project.
 
 ---
 
