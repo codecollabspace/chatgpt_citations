@@ -62,7 +62,7 @@ Once clicked a menu will open on the right with citations ready to copy:
 Contributions to the project are welcome! If you have a bug to report or a feature to suggest, please open an issue in this repository.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 
 ---
