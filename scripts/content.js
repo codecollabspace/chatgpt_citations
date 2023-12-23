@@ -319,7 +319,43 @@ function toggleSidebar() {
 
 insertSidebar();
 
-// wait a second to make sure the chat is loaded
-this.setTimeout(function () {
-    insertCitations();
+// wait for the chat to load
+setTimeout(() => {
+    let chat = document.querySelector('div[class="relative flex h-full max-w-full flex-1 flex-col overflow-hidden"]');
+
+
+    // observe the chat for changes
+    let observer = new MutationObserver(function (mutations) {
+
+        // true if the user switched to a different chat
+        let switchedChat = mutations.some(function (mutation) {
+            if (mutation.target.nodeName == "MAIN") {
+                return true;
+            }
+
+            return false;
+        });
+
+        if (switchedChat) {
+            // wait for the messages to load
+            setTimeout(() => {
+                insertCitations();
+            }, 1000);
+        }
+    });
+
+    observer.observe(chat, { childList: true, subtree: true });
+
 }, 1000);
+
+let promptInput = document.getElementById("prompt-textarea");
+
+// listen on enter key press
+promptInput.addEventListener("keyup", function (event) {
+    if (event.key === "Enter") {
+        // wait for the chat update
+        setTimeout(() => {
+            insertCitations();
+        }, 1000);
+    }
+});
