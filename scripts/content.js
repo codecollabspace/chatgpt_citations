@@ -131,8 +131,8 @@ function insertSidebar() {
     // insert the sidebar container
     let sidebar = document.createElement("div");
     sidebar.id = "citation-sidebar";
-    sidebar.classList = "flex-1 overflow-hidden flex h-full flex-col p-2"
-    sidebar.style = "display: none;"
+    sidebar.classList = "overflow-hidden flex h-full flex-col p-2"
+    sidebar.style = "display: none; width: 30%;"
     parent.appendChild(sidebar);
 
     let title = document.createElement("div");
@@ -303,8 +303,6 @@ function toggleSidebar() {
     if (sidebar.style.display == "none") {
         sidebar.style.display = "flex";
         expander.style.right = "0";
-        chat.classList.remove("flex-1");
-        chat.classList.add("flex-2");
         chat.style = "transition: all 0.2s ease-out;"
         refreshButton.style.display = "flex";
 
@@ -312,8 +310,6 @@ function toggleSidebar() {
     } else {
         sidebar.style.display = "none";
         expander.style.right = "70px";
-        chat.classList.remove("flex-2");
-        chat.classList.add("flex-1");
         chat.style = "";
         refreshButton.style.display = "none";
     }
