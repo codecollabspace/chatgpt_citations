@@ -135,6 +135,11 @@ function insertSidebar() {
     sidebar.style = "display: none;"
     parent.appendChild(sidebar);
 
+    let title = document.createElement("div");
+    title.innerText = "ChatGPT Citation Generator";
+    title.classList = "py-2 px-3 text-lg font-medium";
+    sidebar.appendChild(title);
+
     // insert toggle button for showing/hiding the sidebar
     let expander = document.createElement("div");
     expander.id = "citation-expander";
@@ -243,7 +248,6 @@ function insertCitations() {
 
         let citation = document.createElement("span");
         citation.style = "opacity: 1; transform: none;";
-        citation.classList = "mb-1.5";
         citation.innerHTML = `
         <button class="btn relative btn-neutral group w-full whitespace-nowrap rounded-xl px-4 py-3 text-left text-gray-700 dark:text-gray-300 md:whitespace-normal" as="button">
         <div class="flex w-full gap-2 items-center justify-center">
@@ -263,7 +267,8 @@ function insertCitations() {
     </button>
         `;
         citation.onclick = function () { copyPrompt(prompt) };
-        citation.style.width = "100%";
+        citation.style.width = "90%";
+        citation.style.marginTop = "10px";
 
         container.appendChild(citation);
     }
