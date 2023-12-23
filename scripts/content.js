@@ -317,11 +317,9 @@ function toggleSidebar() {
     }
 }
 
-window.addEventListener("load", function () {
-    insertSidebar();
+insertSidebar();
 
-    // wait a second to make sure the chat is loaded
-    this.setTimeout(function () {
-        insertCitations();
-    }, 1000);
-});
+// wait a second to make sure the chat is loaded
+this.setTimeout(function () {
+    insertCitations();
+}, 1000);
