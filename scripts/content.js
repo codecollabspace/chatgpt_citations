@@ -347,15 +347,3 @@ setTimeout(() => {
     observer.observe(chat, { childList: true, subtree: true });
 
 }, 1000);
-
-let promptInput = document.getElementById("prompt-textarea");
-
-// listen on enter key press
-promptInput.addEventListener("keyup", function (event) {
-    if (event.key === "Enter") {
-        // wait for the chat update
-        setTimeout(() => {
-            insertCitations();
-        }, 1000);
-    }
-});
