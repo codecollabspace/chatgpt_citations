@@ -205,16 +205,3 @@ function copyCitation() {
             console.error('Error in copying text: ', err);
         });
 }
-
-
-function copyCitation() {
-    var citationTextarea = document.getElementById("citation");
-    navigator.clipboard.writeText(citationTextarea.value)
-        .then(() => {
-            console.log('Citation copied to clipboard');
-            // Optionally, display a success message to the user
-        })
-        .catch(err => {
-            console.error('Error in copying text: ', err);
-        });
-}
