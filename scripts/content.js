@@ -307,6 +307,8 @@ function toggleSidebar() {
         chat.classList.add("flex-2");
         chat.style = "transition: all 0.2s ease-out;"
         refreshButton.style.display = "flex";
+
+        insertCitations();
     } else {
         sidebar.style.display = "none";
         expander.style.right = "70px";
