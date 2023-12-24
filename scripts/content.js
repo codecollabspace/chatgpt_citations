@@ -1,3 +1,7 @@
+/**
+ * Returns an array of prompt objects
+ * @returns {Array} an array of prompt objects
+ */
 function getPrompts() {
     let presentation = document.querySelector('div[role="presentation"]');
 
@@ -16,12 +20,13 @@ function getPrompts() {
     let messages = chat.querySelectorAll('div[class="w-full text-token-text-primary"]');
 
 
+    // List of prompt objects
     let prompts = [];
 
     for (let i = 0; i < messages.length; i++) {
         //if i is uneven whe have a new prompt answer pair
         if ((i + 1) % 2 == 1) {
-            prompts.push({ prompt: messages[i].querySelector('div[class=""]').textContent.trim(), answer: "" });
+            prompts.push({ prompt: messages[i].querySelector('div[class=""]').textContent.trim(), answer: "", dataid: messages[i].getAttribute("data-testid")});
         } else {
             prompts[prompts.length - 1].answer = messages[i].querySelector('p').textContent.trim();
         }
@@ -30,12 +35,23 @@ function getPrompts() {
     return prompts;
 }
 
+/**
+ * Generates a unique entry id
+ * @param {*} chatId  the id of the chat
+ * @returns  a unique entry id
+ */
 function generateEntryId(chatId) {
     let shortId = chatId.substring(0, 8);
     let randomId = Math.floor(Math.random() * 1000000);
     return shortId + "_" + Date.now() + "_" + randomId;
 }
 
+
+/**
+ * Generates a BibTeX entry from an object
+ * @param {object} data  the object to generate the BibTeX entry from
+ * @returns  a BibTeX entry
+ */
 function generateBibTeX(data) {
     // Check if it is a json object
     if (typeof data !== "object") {
@@ -99,6 +115,10 @@ function getGPTver() {
     return gptVer
 }
 
+/**
+ * Returns the authors of the chat
+ * @returns  the authors of the chat
+ */
 function getAuthors() {
     const gptVer = getGPTver();
 
@@ -123,6 +143,10 @@ function getAuthors() {
     return "OpenAI CustomGPT gpt-4 " + gptVer.replaceAll(" ", "-").toLowerCase();
 }
 
+/**
+ * Inserts the sidebar into the chat
+ * @returns  nothing
+ */
 function insertSidebar() {
     if (!isChatPage()) {
         // remove all elements if the user is not on a chat page
@@ -193,6 +217,11 @@ function insertSidebar() {
     sidebar.appendChild(citationsContainer);
 }
 
+
+/**
+ * Inserts the citations into the sidebar
+ * @returns  nothing
+ */
 function insertCitations() {
     if (!isChatPage() || !hasInit()) {
         return;
@@ -255,43 +284,36 @@ function insertCitations() {
     for (let i = 0; i < prompts.length; i++) {
         let prompt = prompts[i];
 
-        // let input = prompt.prompt.replace(/&/g, "&amp;")
-        //     .replace(/</g, "&lt;")
-        //     .replace(/>/g, "&gt;")
-        //     .replace(/"/g, "&quot;")
-        //     .replace(/'/g, "&#039;").prompt.prompt.replace(/(\r\n|\n|\r)/gm, " ");
+        let input = escapeHTML(prompt.prompt.replace(/(\r\n|\n|\r)/gm, " "));
+        let output = escapeHTML(prompt.answer.replace(/(\r\n|\n|\r)/gm, " "));
+        let dataid = prompt.dataid;
 
-        // let output = prompt.answer.replace(/&/g, "&amp;")
-        //     .replace(/</g, "&lt;")
-        //     .replace(/>/g, "&gt;")
-        //     .replace(/"/g, "&quot;")
-        //     .replace(/'/g, "&#039;").prompt.prompt.replace(/(\r\n|\n|\r)/gm, " ");
 
-        let input = prompt.prompt.replace(/(\r\n|\n|\r)/gm, " ");
-        let output = prompt.answer.replace(/(\r\n|\n|\r)/gm, " ");
-
+        console.log(dataid);
 
         let citation = document.createElement("span");
         citation.style = "opacity: 1; transform: none;";
+
+    
         citation.innerHTML = `
         <button class="btn relative btn-neutral group w-full whitespace-nowrap rounded-xl px-4 py-3 text-left text-gray-700 dark:text-gray-300 md:whitespace-normal" as="button">
-        <div class="flex w-full gap-2 items-center justify-center">
-            <div class="flex w-full items-center justify-between">
-                <div class="flex flex-col overflow-hidden">
-                    <div class="truncate">${input}</div>
-                    <div class="truncate font-normal opacity-50">${output}</div>
+            <div class="flex w-full gap-2 items-center justify-center">
+                <div class="flex w-full items-center justify-between">
+                    <div class="flex flex-col overflow-hidden">
+                        <div class="truncate">${input}</div>
+                        <div class="truncate font-normal opacity-50">${output}</div>
+                    </div>
+                    <div class="absolute bottom-0 right-0 top-0 flex items-center rounded-xl bg-gradient-to-l from-gray-50 from-[60%] pl-6 pr-4 text-gray-700 opacity-0 group-hover:opacity-100 dark:from-gray-700 dark:text-gray-200"><span class="" data-state="closed">
+                            <div class="rounded-lg bg-token-surface-primary p-1 shadow-xxs dark:shadow-none"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-sm text-token-text-primary">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M12 4C10.8954 4 10 4.89543 10 6H14C14 4.89543 13.1046 4 12 4ZM8.53513 4C9.22675 2.8044 10.5194 2 12 2C13.4806 2 14.7733 2.8044 15.4649 4H17C18.6569 4 20 5.34315 20 7V19C20 20.6569 18.6569 22 17 22H7C5.34315 22 4 20.6569 4 19V7C4 5.34315 5.34315 4 7 4H8.53513ZM8 6H7C6.44772 6 6 6.44772 6 7V19C6 19.5523 6.44772 20 7 20H17C17.5523 20 18 19.5523 18 19V7C18 6.44772 17.5523 6 17 6H16C16 7.10457 15.1046 8 14 8H10C8.89543 8 8 7.10457 8 6Z" fill="currentColor"></path>
+                                </svg></div>
+                        </span></div>
                 </div>
-                <div class="absolute bottom-0 right-0 top-0 flex items-center rounded-xl bg-gradient-to-l from-gray-50 from-[60%] pl-6 pr-4 text-gray-700 opacity-0 group-hover:opacity-100 dark:from-gray-700 dark:text-gray-200"><span class="" data-state="closed">
-                        <div class="rounded-lg bg-token-surface-primary p-1 shadow-xxs dark:shadow-none"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-sm text-token-text-primary">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M12 4C10.8954 4 10 4.89543 10 6H14C14 4.89543 13.1046 4 12 4ZM8.53513 4C9.22675 2.8044 10.5194 2 12 2C13.4806 2 14.7733 2.8044 15.4649 4H17C18.6569 4 20 5.34315 20 7V19C20 20.6569 18.6569 22 17 22H7C5.34315 22 4 20.6569 4 19V7C4 5.34315 5.34315 4 7 4H8.53513ZM8 6H7C6.44772 6 6 6.44772 6 7V19C6 19.5523 6.44772 20 7 20H17C17.5523 20 18 19.5523 18 19V7C18 6.44772 17.5523 6 17 6H16C16 7.10457 15.1046 8 14 8H10C8.89543 8 8 7.10457 8 6Z" fill="currentColor"></path>
-                            </svg></div>
-                    </span></div>
             </div>
-        </div>
-    </button>
+        </button>
         `;
-        citation.onclick = function () { copyPrompt(prompt) };
+        citation.onclick = function () { copyPrompt(prompt); scrollToThatPrompt(dataid);};
         citation.style.width = "90%";
         citation.style.marginTop = "10px";
 
@@ -300,6 +322,23 @@ function insertCitations() {
 
 }
 
+/**
+ * Escapes HTML characters in a string
+ * @param {string} text  the text to escape
+ * @returns {string} the escaped text 
+ */
+function escapeHTML(text) {
+    return text.replace(/&/g, '&amp;')
+               .replace(/</g, '&lt;')
+               .replace(/>/g, '&gt;')
+               .replace(/"/g, '&quot;')
+               .replace(/'/g, '&#039;');
+}
+
+/**
+ * Copies a prompt to the clipboard
+ * @param {*} prompt  the prompt to copy
+ */
 function copyPrompt(prompt) {
     const now = new Date().toISOString().slice(0, 10);
     const authors = getAuthors();
@@ -319,6 +358,10 @@ function copyPrompt(prompt) {
     navigator.clipboard.writeText(citation);
 }
 
+
+/**
+ * Toggles the sidebar
+ */
 function toggleSidebar() {
     let sidebar = document.getElementById("citation-sidebar");
     let expander = document.getElementById("citation-expander");
@@ -366,6 +409,20 @@ let observer = new MutationObserver(function (mutations) {
 });
 
 observer.observe(document.body, { childList: true, subtree: true });
+
+
+/**
+ * An click event listener for to navigate to a prompt when clicked on it, based on the data-testid attribute
+ */
+
+function scrollToThatPrompt(dataid) {
+    let prompt = document.querySelector(`[data-testid="${dataid}"]`);
+    if (!prompt) {
+        return;
+    }
+    prompt.scrollIntoView({ behavior: "smooth" });
+
+}
 
 
 /**
