@@ -70,7 +70,7 @@ function generateBibTeX(data) {
 
     // Title
     if (data.title) {
-        citation += `  title = {${data.title}},\n`;
+        citation += `  title = {${escapeLaTeX(data.title)}},\n`;
     }
 
     // Publisher
@@ -309,6 +309,8 @@ function insertCitations() {
             </div>
         </button>
         `;
+        prompt.prompt = input;
+        prompt.answer = output;
         citation.onclick = function () { copyPrompt(prompt); scrollToThatPrompt(dataid);};
         citation.style.width = "90%";
         citation.style.marginTop = "10px";
@@ -329,6 +331,24 @@ function escapeHTML(text) {
                .replace(/>/g, '&gt;')
                .replace(/"/g, '&quot;')
                .replace(/'/g, '&#039;');
+}
+
+
+/**
+ * Escapes LaTeX characters in a string
+ * @param {*} str  the string to escape
+ * @returns   the escaped string
+ */
+function escapeLaTeX(str) {
+    return str.replace(/\\/g, '{\\textbackslash}')
+              .replace(/\{/g, '\\{')
+              .replace(/\}/g, '\\}')
+              .replace(/\^/g, '\\^{}')
+              .replace(/%/g, '\\%')
+              .replace(/_/g, '\\_')
+              .replace(/~/g, '\\textasciitilde')
+              .replace(/#/g, '\\#')
+              .replace(/&/g, '\\&');
 }
 
 /**
