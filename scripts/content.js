@@ -124,6 +124,28 @@ function getAuthors() {
 }
 
 function insertSidebar() {
+    if (!isChatPage()) {
+        // remove all elements if the user is not on a chat page
+
+        let sidebar = document.getElementById("citation-sidebar");
+        let expander = document.getElementById("citation-expander");
+        let refreshButton = document.getElementById("citation-refresh");
+
+        if (sidebar) {
+            sidebar.remove();
+        }
+
+        if (expander) {
+            expander.remove();
+        }
+
+        if (refreshButton) {
+            refreshButton.remove();
+        }
+
+        return;
+    }
+
     let parent = document.getElementById("__next").querySelector('div[class="relative z-0 flex h-full w-full overflow-hidden"]');
     let chat = document.querySelector('div[class="relative flex h-full max-w-full flex-1 flex-col overflow-hidden"]');
     chat.id = "citations-chat";
@@ -172,10 +194,13 @@ function insertSidebar() {
 }
 
 function insertCitations() {
+    if (!isChatPage() || !hasInit()) {
+        return;
+    }
+
     let container = document.getElementById("citations-container");
 
     // clear the container
-
     while (container.firstChild) {
         container.removeChild(container.firstChild);
     }
@@ -317,31 +342,46 @@ function toggleSidebar() {
 
 insertSidebar();
 
-// wait for the chat to load
-setTimeout(() => {
-    let chat = document.querySelector('div[class="relative flex h-full max-w-full flex-1 flex-col overflow-hidden"]');
+let currentHref = window.location.href;
+
+// observe the chat for changes
+let observer = new MutationObserver(function (mutations) {
+    let navigated = window.location.href != currentHref;
+
+    if (navigated) {
+        currentHref = window.location.href;
+    } else {
+        return;
+    }
+
+    // insert the sidebar if it is not already inserted
+    if (!hasInit()) {
+        insertSidebar();
+    }
+
+    // wait for the messages to load
+    setTimeout(() => {
+        insertCitations();
+    }, 1000);
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
 
 
-    // observe the chat for changes
-    let observer = new MutationObserver(function (mutations) {
+/**
+ * Checks if the sidebar has been inserted
+ * 
+ * @returns {boolean} true if the sidebar has been inserted
+ */
+function hasInit() {
+    return document.getElementById("citation-sidebar") != null;
+}
 
-        // true if the user switched to a different chat
-        let switchedChat = mutations.some(function (mutation) {
-            if (mutation.target.nodeName == "MAIN") {
-                return true;
-            }
-
-            return false;
-        });
-
-        if (switchedChat) {
-            // wait for the messages to load
-            setTimeout(() => {
-                insertCitations();
-            }, 1000);
-        }
-    });
-
-    observer.observe(chat, { childList: true, subtree: true });
-
-}, 1000);
+/**
+ * Checks if the user is on a chat page
+ * 
+ * @returns {boolean} true if the user is on a chat page
+ */
+function isChatPage() {
+    return window.location.href.includes("/c/");
+}
