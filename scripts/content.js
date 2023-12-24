@@ -288,12 +288,8 @@ function insertCitations() {
         let output = escapeHTML(prompt.answer.replace(/(\r\n|\n|\r)/gm, " "));
         let dataid = prompt.dataid;
 
-
-        console.log(dataid);
-
         let citation = document.createElement("span");
         citation.style = "opacity: 1; transform: none;";
-
     
         citation.innerHTML = `
         <button class="btn relative btn-neutral group w-full whitespace-nowrap rounded-xl px-4 py-3 text-left text-gray-700 dark:text-gray-300 md:whitespace-normal" as="button">
