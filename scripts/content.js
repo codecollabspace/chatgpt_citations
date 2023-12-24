@@ -131,8 +131,8 @@ function insertSidebar() {
     // insert the sidebar container
     let sidebar = document.createElement("div");
     sidebar.id = "citation-sidebar";
-    sidebar.classList = "flex-1 overflow-hidden flex h-full flex-col p-2"
-    sidebar.style = "display: none;"
+    sidebar.classList = "overflow-hidden flex h-full flex-col p-2"
+    sidebar.style = "display: none; width: 30%;"
     parent.appendChild(sidebar);
 
     let title = document.createElement("div");
@@ -303,15 +303,13 @@ function toggleSidebar() {
     if (sidebar.style.display == "none") {
         sidebar.style.display = "flex";
         expander.style.right = "0";
-        chat.classList.remove("flex-1");
-        chat.classList.add("flex-2");
         chat.style = "transition: all 0.2s ease-out;"
         refreshButton.style.display = "flex";
+
+        insertCitations();
     } else {
         sidebar.style.display = "none";
         expander.style.right = "70px";
-        chat.classList.remove("flex-2");
-        chat.classList.add("flex-1");
         chat.style = "";
         refreshButton.style.display = "none";
     }
@@ -319,7 +317,31 @@ function toggleSidebar() {
 
 insertSidebar();
 
-// wait a second to make sure the chat is loaded
-this.setTimeout(function () {
-    insertCitations();
+// wait for the chat to load
+setTimeout(() => {
+    let chat = document.querySelector('div[class="relative flex h-full max-w-full flex-1 flex-col overflow-hidden"]');
+
+
+    // observe the chat for changes
+    let observer = new MutationObserver(function (mutations) {
+
+        // true if the user switched to a different chat
+        let switchedChat = mutations.some(function (mutation) {
+            if (mutation.target.nodeName == "MAIN") {
+                return true;
+            }
+
+            return false;
+        });
+
+        if (switchedChat) {
+            // wait for the messages to load
+            setTimeout(() => {
+                insertCitations();
+            }, 1000);
+        }
+    });
+
+    observer.observe(chat, { childList: true, subtree: true });
+
 }, 1000);
