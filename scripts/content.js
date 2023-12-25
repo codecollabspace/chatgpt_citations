@@ -27,17 +27,23 @@ function getPrompts() {
         // Check if i is uneven we have a new prompt answer pair
         if ((i + 1) % 2 == 1) {
             var promptText = "";
-            // Check for an image with the alt text "Uploaded image" as this is currently only the solution to get the image URL for now
-            let imageElement = messages[i].querySelector('img[alt="Uploaded image"]'); 
-            let imageExist = imageElement ? true : false;
 
-            // Check if the image URL is not null and set the prompt text to the second div element if an image is found
-            if (imageExist) promptText = messages[i].querySelectorAll('div[class=""]')[1].textContent.trim();
-            else promptText = messages[i].querySelector('div[class=""]').textContent.trim();
+            // Get all images in the prompt
+            let imageElements = messages[i].querySelectorAll('img[alt="Uploaded image"]'); 
+            let imageUploadedImagesInfoText = imageElements.length > 0 ? "[Uploaded image]\n".repeat(imageElements.length) : null;
+
+            if (imageUploadedImagesInfoText) {
+                // Assuming the text is after the images
+                let textDivs = messages[i].querySelectorAll('div[class=""]');
+                promptText = textDivs[textDivs.length - 1].textContent.trim();
+            } else {
+                // If no images, get the first div for text
+                promptText = messages[i].querySelector('div[class=""]').textContent.trim();
+            }
             prompts.push({ 
                 prompt: promptText, 
                 answer: "", 
-                imagesExist:imageExist , // Add imageUrl field
+                imageUploadedInfo: imageUploadedImagesInfoText ,
                 dataid: messages[i].getAttribute("data-testid")
             });
         } else {
@@ -298,7 +304,7 @@ function insertCitations() {
         let prompt = prompts[i];
 
         // If image exist add the image url + the prompt to the citation
-        let input = escapeHTML(prompt.prompt.replace(/(\r\n|\n|\r)/gm, " "));
+        let input = prompt.imageUploadedInfo ? prompt.imageUploadedInfo + "\n"+ prompt.prompt : prompt.prompt;
         let output = escapeHTML(prompt.answer.replace(/(\r\n|\n|\r)/gm, " "));
         let dataid = prompt.dataid;
 
