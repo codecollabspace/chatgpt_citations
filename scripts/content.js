@@ -29,15 +29,15 @@ function getPrompts() {
             var promptText = "";
             // Check for an image with the alt text "Uploaded image" as this is currently only the solution to get the image URL for now
             let imageElement = messages[i].querySelector('img[alt="Uploaded image"]'); 
-            let imageUrl = imageElement ? imageElement.src : null; // Get the image URL if an image is found
+            let imageExist = imageElement ? true : false;
 
             // Check if the image URL is not null and set the prompt text to the second div element if an image is found
-            if (imageUrl) promptText = messages[i].querySelectorAll('div[class=""]')[1].textContent.trim();
+            if (imageExist) promptText = messages[i].querySelectorAll('div[class=""]')[1].textContent.trim();
             else promptText = messages[i].querySelector('div[class=""]').textContent.trim();
             prompts.push({ 
                 prompt: promptText, 
                 answer: "", 
-                imageUrl: imageUrl, // Add imageUrl field
+                imagesExist:imageExist , // Add imageUrl field
                 dataid: messages[i].getAttribute("data-testid")
             });
         } else {
@@ -56,7 +56,7 @@ function getPrompts() {
 function generateEntryId(chatId) {
     let shortId = chatId.substring(0, 8);
     let randomId = Math.floor(Math.random() * 1000000);
-    return shortId + "_" + Date.now() + "_" + randomId;
+    return (shortId + "_" + Date.now() + "_" + randomId).replaceAll(" ", "_").replaceAll("\n", "_");
 }
 
 
@@ -298,8 +298,7 @@ function insertCitations() {
         let prompt = prompts[i];
 
         // If image exist add the image url + the prompt to the citation
-        let input = prompt.imageUrl ? prompt.imageUrl :  "";
-        input += "\n"+escapeHTML(prompt.prompt.replace(/(\r\n|\n|\r)/gm, " "));
+        let input = escapeHTML(prompt.prompt.replace(/(\r\n|\n|\r)/gm, " "));
         let output = escapeHTML(prompt.answer.replace(/(\r\n|\n|\r)/gm, " "));
         let dataid = prompt.dataid;
 
