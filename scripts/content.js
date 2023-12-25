@@ -24,9 +24,22 @@ function getPrompts() {
     let prompts = [];
 
     for (let i = 0; i < messages.length; i++) {
-        //if i is uneven whe have a new prompt answer pair
+        // Check if i is uneven we have a new prompt answer pair
         if ((i + 1) % 2 == 1) {
-            prompts.push({ prompt: messages[i].querySelector('div[class=""]').textContent.trim(), answer: "", dataid: messages[i].getAttribute("data-testid")});
+            var promptText = "";
+            // Check for an image with the alt text "Uploaded image" as this is currently only the solution to get the image URL for now
+            let imageElement = messages[i].querySelector('img[alt="Uploaded image"]'); 
+            let imageUrl = imageElement ? imageElement.src : null; // Get the image URL if an image is found
+
+            // Check if the image URL is not null and set the prompt text to the second div element if an image is found
+            if (imageUrl) promptText = messages[i].querySelectorAll('div[class=""]')[1].textContent.trim();
+            else promptText = messages[i].querySelector('div[class=""]').textContent.trim();
+            prompts.push({ 
+                prompt: promptText, 
+                answer: "", 
+                imageUrl: imageUrl, // Add imageUrl field
+                dataid: messages[i].getAttribute("data-testid")
+            });
         } else {
             prompts[prompts.length - 1].answer = messages[i].querySelector('p').textContent.trim();
         }
@@ -284,7 +297,9 @@ function insertCitations() {
     for (let i = 0; i < prompts.length; i++) {
         let prompt = prompts[i];
 
-        let input = escapeHTML(prompt.prompt.replace(/(\r\n|\n|\r)/gm, " "));
+        // If image exist add the image url + the prompt to the citation
+        let input = prompt.imageUrl ? prompt.imageUrl :  "";
+        input += "\n"+escapeHTML(prompt.prompt.replace(/(\r\n|\n|\r)/gm, " "));
         let output = escapeHTML(prompt.answer.replace(/(\r\n|\n|\r)/gm, " "));
         let dataid = prompt.dataid;
 
