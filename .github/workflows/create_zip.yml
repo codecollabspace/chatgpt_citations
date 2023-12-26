@@ -3,90 +3,51 @@ name: Build Zip File
 on:
   push:
     branches:
-      - main
+      - main 
       - chrome
       - firefox
     paths-ignore:
-      - 'browser-zipped-extensions/*'
+      - *.zip
 
 jobs:
-  build-chrome:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome, firefox]
+
     steps:
     - name: Checkout main branch
       uses: actions/checkout@v2
       with:
         path: 'workspace'
         token: ${{ secrets.PA_TOKEN }}
-
-    - name: Checkout Chrome branch for manifest.json
+        
+    - name: Checkout ${{ matrix.browser }} branch for manifest.json
       uses: actions/checkout@v2
       with:
-        ref: chrome
-        path: workspace/chrome
+        ref: ${{ matrix.browser }}
+        path: ${{ matrix.browser }}
         token: ${{ secrets.PA_TOKEN }}
 
-    - name: Prepare Chrome extension directory
+    - name: Prepare extension directory
       run: |
-        mkdir workspace/chrome-extension
-        cp -r workspace/icons workspace/scripts workspace/chrome-extension/
-        cp workspace/chrome/manifest.json workspace/chrome-extension/
+        mkdir extension
+        cp -r workspace/icons workspace/scripts extension/
+        cp ${{ matrix.browser }}/manifest.json extension/
 
-    - name: Zip Chrome extension
+    - name: Zip extension
       run: |
-        cd workspace/chrome-extension
-        zip -r ../../chrome.zip icons scripts manifest.json
+        zip -r ${{ matrix.browser }}.zip extension/icons extension/scripts extension/manifest.json
 
-  build-firefox:
-    needs: build-chrome
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout main branch
-      uses: actions/checkout@v2
+    - name: Commit files
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -m "Update ${{ matrix.browser }}.zip" -a
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
       with:
-        path: 'workspace'
-        token: ${{ secrets.PA_TOKEN }}
-
-    - name: Checkout Firefox branch for manifest.json
-      uses: actions/checkout@v2
-      with:
-        ref: firefox
-        path: workspace/firefox
-        token: ${{ secrets.PA_TOKEN }}
-
-    - name: Prepare Firefox extension directory
-      run: |
-        mkdir workspace/firefox-extension
-        cp -r workspace/icons workspace/scripts workspace/firefox-extension/
-        cp workspace/firefox/manifest.json workspace/firefox-extension/
-
-    - name: Zip Firefox extension
-      run: |
-        cd workspace/firefox-extension
-        zip -r ../../firefox.zip icons scripts manifest.json
-
-  commit-and-push:
-    needs: [build-chrome, build-firefox]
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout main branch
-      uses: actions/checkout@v2
-      with:
-        path: 'workspace'
-        token: ${{ secrets.PA_TOKEN }}
-
-    - name: Move zip files to workspace
-      run: |
-        mkdir -p workspace/browser-zipped-extensions
-        mv chrome.zip firefox.zip workspace/browser-zipped-extensions/
-
-    - name: Commit and Push zipped extensions
-      uses: EndBug/add-and-commit@v7
-      with:
-        author_name: github-actions[bot]
-        author_email: 41898282+github-actions[bot]@users.noreply.github.com
-        message: 'Build zip file for chrome and firefox'
-        add: 'browser-zipped-extensions/'
-        default_author: github_actions
-        cwd: 'workspace'
-      if: github.ref == 'refs/heads/main'
+        github_token: ${{ secrets.PA_TOKEN }}
+        branch: ${{ matrix.browser }}
