@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'browser-zipped-extesions/*'  # Replace with the actual path if needed 
+      - 'browser-zipped-extensions/*'  # Replace with the actual path if needed 
 
 jobs:
   build:
@@ -42,8 +42,8 @@ jobs:
 
     - name: Move zip file to a separate directory
       run: |
-        mkdir -p workspace/browser-zipped-extesions
-        mv ${{ matrix.browser }}.zip workspace/browser-zipped-extesions/
+        mkdir -p workspace/browser-zipped-extensions
+        mv ${{ matrix.browser }}.zip workspace/browser-zipped-extensions/
 
     - name: Commit and Push
       uses: EndBug/add-and-commit@v7
@@ -51,7 +51,7 @@ jobs:
         author_name: github-actions[bot]
         author_email: 41898282+github-actions[bot]@users.noreply.github.com
         message: 'Build ${{ matrix.browser }} extension'
-        add: 'browser-zipped-extesions/*'
+        add: 'browser-zipped-extensions/*'
         default_author: github_actions
         cwd: 'workspace'
       if: github.ref == 'refs/heads/main'
