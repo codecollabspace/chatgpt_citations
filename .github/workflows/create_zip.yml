@@ -37,11 +37,6 @@ jobs:
         cd chrome-extension
         zip -r ../chrome.zip icons scripts manifest.json
 
-    - name: Move Chrome zip file to a separate directory
-      run: |
-        mkdir -p workspace/browser-zipped-extensions
-        mv chrome.zip workspace/browser-zipped-extensions/
-
   build-firefox:
     needs: build-chrome
     runs-on: ubuntu-latest
@@ -70,15 +65,15 @@ jobs:
         cd firefox-extension
         zip -r ../firefox.zip icons scripts manifest.json
 
-    - name: Move Firefox zip file to a separate directory
-      run: |
-        mkdir -p workspace/browser-zipped-extensions
-        mv firefox.zip workspace/browser-zipped-extensions/
-
   commit-and-push:
     needs: [build-chrome, build-firefox]
     runs-on: ubuntu-latest
     steps:
+    - name: Move zip files to workspace
+      run: |
+        mkdir browser-zipped-extensions
+        mv chrome.zip firefox.zip browser-zipped-extensions/
+
     - name: Checkout main branch
       uses: actions/checkout@v2
       with:
@@ -89,8 +84,8 @@ jobs:
       with:
         author_name: github-actions[bot]
         author_email: 41898282+github-actions[bot]@users.noreply.github.com
-        message: 'Build extensions'
-        add: 'workspace/browser-zipped-extensions/*'
+        message: 'Build zip file for chrome and firefox'
+        add: 'browser-zipped-extensions/'
         default_author: github_actions
         cwd: 'workspace'
       if: github.ref == 'refs/heads/main'
