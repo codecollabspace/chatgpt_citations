@@ -34,9 +34,10 @@ jobs:
       run: |
         zip -r ${{ matrix.browser }}.zip extension
 
-    - name: Move zip file to main directory
+    - name: Move zip file to a separate directory
       run: |
-        mv ${{ matrix.browser }}.zip main/
+        mkdir -p zipped-extensions
+        mv ${{ matrix.browser }}.zip zipped-extensions/
 
     - name: Commit and Push
       uses: EndBug/add-and-commit@v7
@@ -44,7 +45,6 @@ jobs:
         author_name: github-actions[bot]
         author_email: 41898282+github-actions[bot]@users.noreply.github.com
         message: 'Build ${{ matrix.browser }} extension'
-        add: 'main/*.zip'
+        add: 'zipped-extensions/*.zip'
         default_author: github_actions
-        cwd: 'main'
       if: github.ref == 'refs/heads/main'
