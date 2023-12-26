@@ -23,19 +23,19 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: chrome
-        path: chrome
+        path: workspace/chrome
         token: ${{ secrets.PA_TOKEN }}
 
     - name: Prepare Chrome extension directory
       run: |
-        mkdir chrome-extension
-        cp -r workspace/icons workspace/scripts chrome-extension/
-        cp chrome/manifest.json chrome-extension/
+        mkdir workspace/chrome-extension
+        cp -r workspace/icons workspace/scripts workspace/chrome-extension/
+        cp workspace/chrome/manifest.json workspace/chrome-extension/
 
     - name: Zip Chrome extension
       run: |
-        cd chrome-extension
-        zip -r ../chrome.zip icons scripts manifest.json
+        cd workspace/chrome-extension
+        zip -r ../../chrome.zip icons scripts manifest.json
 
   build-firefox:
     needs: build-chrome
@@ -51,19 +51,19 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: firefox
-        path: firefox
+        path: workspace/firefox
         token: ${{ secrets.PA_TOKEN }}
 
     - name: Prepare Firefox extension directory
       run: |
-        mkdir firefox-extension
-        cp -r workspace/icons workspace/scripts firefox-extension/
-        cp firefox/manifest.json firefox-extension/
+        mkdir workspace/firefox-extension
+        cp -r workspace/icons workspace/scripts workspace/firefox-extension/
+        cp workspace/firefox/manifest.json workspace/firefox-extension/
 
     - name: Zip Firefox extension
       run: |
-        cd firefox-extension
-        zip -r ../firefox.zip icons scripts manifest.json
+        cd workspace/firefox-extension
+        zip -r ../../firefox.zip icons scripts manifest.json
 
   commit-and-push:
     needs: [build-chrome, build-firefox]
@@ -77,8 +77,8 @@ jobs:
 
     - name: Move zip files to workspace
       run: |
-        mkdir browser-zipped-extensions
-        mv chrome.zip firefox.zip browser-zipped-extensions/
+        mkdir -p workspace/browser-zipped-extensions
+        mv chrome.zip firefox.zip workspace/browser-zipped-extensions/
 
     - name: Commit and Push zipped extensions
       uses: EndBug/add-and-commit@v7
