@@ -1,0 +1,48 @@
+name: Build Zip File
+
+on:
+  push:
+    branches:
+      - main
+      - chrome
+      - firefox
+    paths-ignore:
+      - '*.zip'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome, firefox]
+
+    steps:
+    - name: Checkout main branch to a temporary directory
+      uses: actions/checkout@v2
+      with:
+        ref: main
+        path: temp
+
+    - name: Checkout ${{ matrix.browser }} branch to a a directory where the zip file will be created
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ matrix.browser }}
+        path: ${{ matrix.browser }}
+
+    - name: Copy scripts and icons from main branch to ${{ matrix.browser }} branch
+      run: cp -r temp/scripts ${{ matrix.browser }} && cp -r temp/icons ${{ matrix.browser }}
+
+    - name: Create zip file with ${{ matrix.browser }} branch contents
+      run: cd ${{ matrix.browser }} && zip -r ${{ matrix.browser }}.zip *
+
+    - name: Commit and push changes to ${{ matrix.browser }} branch
+      uses: EndBug/add-and-commit@v9.1.3
+      with:
+        author_name: GitHub Actions
+        author_email: 123456+github-actions[bot]@users.noreply.github.com
+        message: "Update ${{ matrix.browser }} branch"
+        add: '${{ matrix.browser }}.zip'
+        push: true
+        cwd: ${{ matrix.browser }}
+
+      
