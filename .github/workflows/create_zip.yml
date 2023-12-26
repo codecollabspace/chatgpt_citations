@@ -17,13 +17,17 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: 'workspace'
+        token: ${{ secrets.PA_TOKEN }}
+        
+        
 
     - name: Checkout ${{ matrix.browser }} branch for manifest.json
       uses: actions/checkout@v2
       with:
         ref: ${{ matrix.browser }}
         path: ${{ matrix.browser }}
-
+        token: ${{ secrets.PA_TOKEN }}
+        
     - name: Prepare extension directory
       run: |
         mkdir extension
@@ -40,12 +44,12 @@ jobs:
         mv ${{ matrix.browser }}.zip workspace/zipped-extensions/
 
     - name: Commit and Push
-      run: |
-        git config --local user.name "github-actions[bot]"
-        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add zipped-extensions/*
-        git commit -m 'Build ${{ matrix.browser }} extension'
-        git push origin main
-      env:
-        PA_TOKEN: ${{ secrets.PA_TOKEN }}
+      uses: EndBug/add-and-commit@v7
+      with:
+        author_name: github-actions[bot]
+        author_email: 41898282+github-actions[bot]@users.noreply.github.com
+        message: 'Build ${{ matrix.browser }} extension'
+        add: 'zipped-extensions/*'
+        default_author: github_actions
+        cwd: 'workspace'
       if: github.ref == 'refs/heads/main'
