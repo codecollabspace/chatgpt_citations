@@ -32,13 +32,14 @@ function getPrompts() {
             let imageElements = messages[i].querySelectorAll('img[alt="Uploaded image"]'); 
             let imageUploadedImagesInfoText = imageElements.length > 0 ? "[Uploaded image]\n".repeat(imageElements.length) : null;
 
-            if (imageUploadedImagesInfoText) {
+            if (imageElements.length > 0) {
                 // Assuming the text is after the images
                 let textDivs = messages[i].querySelectorAll('div[class=""]');
-                promptText = textDivs[textDivs.length - 1].textContent.trim();
+                promptText = textDivs[textDivs.length - 1] ? textDivs[textDivs.length - 1].textContent.trim() : "";
             } else {
                 // If no images, get the first div for text
-                promptText = messages[i].querySelector('div[class=""]').textContent.trim();
+                let promptTextElement = messages[i].querySelector('div[class=""]');
+                promptText = promptTextElement ? promptTextElement.textContent.trim() : "";
             }
             prompts.push({ 
                 prompt: promptText, 
@@ -46,8 +47,11 @@ function getPrompts() {
                 imageUploadedInfo: imageUploadedImagesInfoText ,
                 dataid: messages[i].getAttribute("data-testid")
             });
+
         } else {
-            prompts[prompts.length - 1].answer = messages[i].querySelector('p').textContent.trim();
+            let answerElement =  messages[i].querySelector('p');
+            if (answerElement && prompts.length > 0) prompts[prompts.length - 1].answer = answerElement.textContent.trim();
+            else if (prompts.length > 0) prompts[prompts.length - 1].answer = "";
         }
     }
 
@@ -304,7 +308,7 @@ function insertCitations() {
         let prompt = prompts[i];
 
         // If image exist add the image url + the prompt to the citation
-        let input = prompt.imageUploadedInfo ? prompt.imageUploadedInfo + "\n"+ prompt.prompt : prompt.prompt;
+        let input = (prompt.imageUploadedInfo ? prompt.imageUploadedInfo + "\n" : "") + escapeHTML(prompt.prompt);
         let output = escapeHTML(prompt.answer.replace(/(\r\n|\n|\r)/gm, " "));
         let dataid = prompt.dataid;
 
