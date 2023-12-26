@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+      - chrome
+      - firefox
     paths-ignore:
       - 'browser-zipped-extensions/*'  # Replace with the actual path if needed 
 
@@ -23,6 +25,7 @@ jobs:
         
         
 
+
     - name: Checkout ${{ matrix.browser }} branch for manifest.json
       uses: actions/checkout@v2
       with:
@@ -38,7 +41,9 @@ jobs:
 
     - name: Zip extension
       run: |
-        zip -r ${{ matrix.browser }}.zip extension/icons extension/scripts extension/manifest.json
+        cd extension
+        zip -r ../${{ matrix.browser }}.zip icons scripts manifest.json
+        
 
     - name: Move zip file to a separate directory
       run: |
