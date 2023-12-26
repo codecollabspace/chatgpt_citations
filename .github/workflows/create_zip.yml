@@ -16,7 +16,7 @@ jobs:
     - name: Checkout main branch
       uses: actions/checkout@v2
       with:
-        path: 'main'
+        path: 'workspace'
 
     - name: Checkout ${{ matrix.browser }} branch for manifest.json
       uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
     - name: Prepare extension directory
       run: |
         mkdir extension
-        cp -r main/icons main/scripts extension/
+        cp -r workspace/icons workspace/scripts extension/
         cp ${{ matrix.browser }}/manifest.json extension/
 
     - name: Zip extension
@@ -36,8 +36,8 @@ jobs:
 
     - name: Move zip file to a separate directory
       run: |
-        mkdir -p zipped-extensions
-        mv ${{ matrix.browser }}.zip zipped-extensions/
+        mkdir -p workspace/zipped-extensions
+        mv ${{ matrix.browser }}.zip workspace/zipped-extensions/
 
     - name: Commit and Push
       uses: EndBug/add-and-commit@v7
@@ -45,6 +45,7 @@ jobs:
         author_name: github-actions[bot]
         author_email: 41898282+github-actions[bot]@users.noreply.github.com
         message: 'Build ${{ matrix.browser }} extension'
-        add: 'zipped-extensions/*.zip'
+        add: 'zipped-extensions/*'
         default_author: github_actions
+        cwd: 'workspace'
       if: github.ref == 'refs/heads/main'
