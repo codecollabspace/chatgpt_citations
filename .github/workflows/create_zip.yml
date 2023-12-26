@@ -38,7 +38,7 @@ jobs:
 
     - name: Zip extension
       run: |
-        zip -r ${{ matrix.browser }}.zip extension/*
+        zip -r ${{ matrix.browser }}.zip extension/icons extension/scripts extension/manifest.json
 
     - name: Move zip file to a separate directory
       run: |
