@@ -3,8 +3,6 @@ name: Build Zip File
 on:
   push:
     branches:
-      - main
-      - chrome
       - firefox
     paths-ignore:
       - '*.zip'
