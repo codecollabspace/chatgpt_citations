@@ -6,9 +6,6 @@ on:
       - main
     paths-ignore:
       - 'browser-zipped-extesions/*'  # Replace with the actual path if needed 
-    branches-ignore:
-      - main  # Ignoring main here to avoid infinite loop
-
 
 jobs:
   build:
