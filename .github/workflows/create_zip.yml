@@ -69,15 +69,16 @@ jobs:
     needs: [build-chrome, build-firefox]
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout main branch
+      uses: actions/checkout@v2
+      with:
+        path: 'workspace'
+        token: ${{ secrets.PA_TOKEN }}
+
     - name: Move zip files to workspace
       run: |
         mkdir browser-zipped-extensions
         mv chrome.zip firefox.zip browser-zipped-extensions/
-
-    - name: Checkout main branch
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.PA_TOKEN }}
 
     - name: Commit and Push zipped extensions
       uses: EndBug/add-and-commit@v7
