@@ -1,172 +1,4 @@
 /**
- * Returns an array of prompt objects
- * @returns {Array} an array of prompt objects
- */
-function getPrompts() {
-    let presentation = document.querySelector('div[role="presentation"]');
-
-    if (!presentation) {
-        return [];
-    }
-
-    let chat = presentation.children[0];
-
-
-    if (!chat) {
-        return [];
-    }
-
-    // get all children with theses classes w-full text-token-text-primary
-    let messages = chat.querySelectorAll('div[class="w-full text-token-text-primary"]');
-
-
-    // List of prompt objects
-    let prompts = [];
-
-    for (let i = 0; i < messages.length; i++) {
-        // Check if i is uneven we have a new prompt answer pair
-        if ((i + 1) % 2 == 1) {
-            var promptText = "";
-
-            // Get all images in the prompt
-            let imageElements = messages[i].querySelectorAll('img[alt="Uploaded image"]'); 
-            let imageUploadedImagesInfoText = imageElements.length > 0 ? "[Uploaded image]\n".repeat(imageElements.length) : null;
-
-            if (imageElements.length > 0) {
-                // Assuming the text is after the images
-                let textDivs = messages[i].querySelectorAll('div[class=""]');
-                promptText = textDivs[textDivs.length - 1] ? textDivs[textDivs.length - 1].textContent.trim() : "";
-            } else {
-                // If no images, get the first div for text
-                let promptTextElement = messages[i].querySelector('div[class=""]');
-                promptText = promptTextElement ? promptTextElement.textContent.trim() : "";
-            }
-            prompts.push({ 
-                prompt: promptText, 
-                answer: "", 
-                imageUploadedInfo: imageUploadedImagesInfoText ,
-                dataid: messages[i].getAttribute("data-testid")
-            });
-
-        } else {
-            let answerElement =  messages[i].querySelector('p');
-            if (answerElement && prompts.length > 0) prompts[prompts.length - 1].answer = answerElement.textContent.trim();
-            else if (prompts.length > 0) prompts[prompts.length - 1].answer = "";
-        }
-    }
-
-    return prompts;
-}
-
-/**
- * Generates a unique entry id
- * @param {*} chatId  the id of the chat
- * @returns  a unique entry id
- */
-function generateEntryId(chatId) {
-    let shortId = chatId.substring(0, 8);
-    let randomId = Math.floor(Math.random() * 1000000);
-    return (shortId + "_" + Date.now() + "_" + randomId).replaceAll(" ", "_").replaceAll("\n", "_");
-}
-
-
-/**
- * Generates a BibTeX entry from an object
- * @param {object} data  the object to generate the BibTeX entry from
- * @returns  a BibTeX entry
- */
-function generateBibTeX(data) {
-    // Check if it is a json object
-    if (typeof data !== "object") {
-        return "";
-    }
-
-    let citation = "";
-
-    // Start the entry
-    citation += `@online{${data.id},\n`;
-
-    // Author
-    if (data.author) {
-        citation += `  author = {${data.author}},\n`;
-    }
-
-    // Title
-    if (data.title) {
-        citation += `  title = {${escapeLaTeX(data.title)}},\n`;
-    }
-
-    // Publisher
-    if (data.publisher) {
-        citation += `  publisher = {${data.publisher}},\n`;
-    }
-
-    // Year
-    if (data.date) {
-        citation += `  date = {${data.date}},\n`;
-    }
-
-    // URL
-    if (data.url) {
-        citation += `  url = {${data.url}}\n`;
-    }
-
-    // End the entry
-    citation += `}`;
-
-
-    return citation;
-
-}
-
-/**
- * Returns the GPT version used in the chat
- * 
- * @returns {string} the GPT version used in the chat
- */
-function getGPTver() {
-    let titleBar = document.querySelector('div[class="sticky top-0 mb-1.5 flex items-center justify-between z-10 h-14 bg-white p-2 font-semibold dark:bg-gray-800"]');
-
-    let gptVer = titleBar.children[1].children[0].children[0].innerText;
-
-    if (!gptVer) {
-        let gptName = document.querySelector('div[class="group flex cursor-pointer items-center gap-1 rounded-xl py-2 px-3 text-lg font-medium hover:bg-gray-50 radix-state-open:bg-gray-50 dark:hover:bg-black/10 dark:radix-state-open:bg-black/20"]');
-
-        return gptName.innerText;
-    }
-
-    return gptVer
-}
-
-/**
- * Returns the authors of the chat
- * @returns  the authors of the chat
- */
-function getAuthors() {
-    const gptVer = getGPTver();
-
-    if (!gptVer) {
-        return "OpenAI ChatGPT";
-    }
-
-    if (gptVer == "ChatGPT Plugins") {
-        return "OpenAI gpt-4-plugins"
-    }
-
-    if (gptVer == "ChatGPT 4") {
-        return "OpenAI gpt-4"
-    }
-
-    if (gptVer == "ChatGPT 3.5") {
-        return "OpenAI gpt-3.5"
-    }
-
-
-
-    return "OpenAI CustomGPT gpt-4 " + gptVer.replaceAll(" ", "-").toLowerCase();
-}
-
-/**
  * Inserts the sidebar into the chat
  * @returns  nothing
  */
@@ -314,7 +146,7 @@ function insertCitations() {
 
         let citation = document.createElement("span");
         citation.style = "opacity: 1; transform: none;";
-    
+
         citation.innerHTML = `
         <button class="btn relative btn-neutral group w-full whitespace-nowrap rounded-xl px-4 py-3 text-left text-gray-700 dark:text-gray-300 md:whitespace-normal" as="button">
             <div class="flex w-full gap-2 items-center justify-center">
@@ -335,7 +167,7 @@ function insertCitations() {
         `;
         prompt.prompt = input;
         prompt.answer = output;
-        citation.onclick = function () { copyPrompt(prompt); scrollToThatPrompt(dataid);};
+        citation.onclick = function () { copyPrompt(prompt); scrollToPrompt(dataid); };
         citation.style.width = "90%";
         citation.style.marginTop = "10px";
 
@@ -343,61 +175,6 @@ function insertCitations() {
     }
 
 }
-
-/**
- * Escapes HTML characters in a string
- * @param {string} text  the text to escape
- * @returns {string} the escaped text 
- */
-function escapeHTML(text) {
-    return text.replace(/&/g, '&amp;')
-               .replace(/</g, '&lt;')
-               .replace(/>/g, '&gt;')
-               .replace(/"/g, '&quot;')
-               .replace(/'/g, '&#039;');
-}
-
-
-/**
- * Escapes LaTeX characters in a string
- * @param {*} str  the string to escape
- * @returns   the escaped string
- */
-function escapeLaTeX(str) {
-    return str.replace(/\\/g, '{\\textbackslash}')
-              .replace(/\{/g, '\\{')
-              .replace(/\}/g, '\\}')
-              .replace(/\^/g, '\\^{}')
-              .replace(/%/g, '\\%')
-              .replace(/_/g, '\\_')
-              .replace(/~/g, '\\textasciitilde')
-              .replace(/#/g, '\\#')
-              .replace(/&/g, '\\&');
-}
-
-/**
- * Copies a prompt to the clipboard
- * @param {*} prompt  the prompt to copy
- */
-function copyPrompt(prompt) {
-    const now = new Date().toISOString().slice(0, 10);
-    const authors = getAuthors();
-
-    let citationData = {
-        id: generateEntryId(prompt.prompt),
-        // we could theorectically use the name of the chat as title, however the Austrian government does require the title of the source to be the prompt
-        title: prompt.prompt,
-        author: authors,
-        publisher: "",
-        url: window.location.href,
-        date: now
-    };
-
-    let citation = generateBibTeX(citationData);
-
-    navigator.clipboard.writeText(citation);
-}
-
 
 /**
  * Toggles the sidebar
@@ -421,64 +198,4 @@ function toggleSidebar() {
         chat.style = "";
         refreshButton.style.display = "none";
     }
-}
-
-insertSidebar();
-
-let currentHref = window.location.href;
-
-// observe the chat for changes
-let observer = new MutationObserver(function (mutations) {
-    let navigated = window.location.href != currentHref;
-
-    if (navigated) {
-        currentHref = window.location.href;
-    } else {
-        return;
-    }
-
-    // insert the sidebar if it is not already inserted
-    if (!hasInit()) {
-        insertSidebar();
-    }
-
-    // wait for the messages to load
-    setTimeout(() => {
-        insertCitations();
-    }, 1000);
-});
-
-observer.observe(document.body, { childList: true, subtree: true });
-
-
-/**
- * An click event listener for to navigate to a prompt when clicked on it, based on the data-testid attribute
- */
-
-function scrollToThatPrompt(dataid) {
-    let prompt = document.querySelector(`[data-testid="${dataid}"]`);
-    if (!prompt) {
-        return;
-    }
-    prompt.scrollIntoView({ behavior: "smooth" });
-
-}
-
-
-/**
- * Checks if the sidebar has been inserted
- * 
- * @returns {boolean} true if the sidebar has been inserted
- */
-function hasInit() {
-    return document.getElementById("citation-sidebar") != null;
-}
-
-/**
- * Checks if the user is on a chat page
- * 
- * @returns {boolean} true if the user is on a chat page
- */
-function isChatPage() {
-    return window.location.href.includes("/c/");
 }
