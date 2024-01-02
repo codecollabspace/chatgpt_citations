@@ -37,7 +37,7 @@ function insertSidebar() {
     parent.appendChild(sidebar);
 
     let title = document.createElement("div");
-    title.innerText = "ChatGPT Citation Generator";
+    title.innerText = "ChatGPT Citations";
     title.classList = "py-2 px-3 text-lg font-medium";
     sidebar.appendChild(title);
 
@@ -109,7 +109,7 @@ function insertCitations() {
         let link = document.createElement("a");
         link.innerText = "GitHub";
         link.classList = "px-0.5 text-green-600 !no-underline"
-        link.href = "https://github.com/codecollabspace/chatgpt_diploma_citation_extension/issues/new?title=Error%20while%20getting%20citations&body=Error%20message:%20" + encodeURIComponent(error.message) + "%0A%0AStack%20trace:%20" + encodeURIComponent(error.stack) + "%0A%0AChat%20URL:%20" + encodeURIComponent("<<PLEASE EXPORT YOUR CHAT AND PASTE THE LINK HERE>>");
+        link.href = "https://github.com/codecollabspace/chatgpt_citations/issues/new?title=Error%20while%20getting%20citations&body=Error%20message:%20" + encodeURIComponent(error.message) + "%0A%0AStack%20trace:%20" + encodeURIComponent(error.stack) + "%0A%0AChat%20URL:%20" + encodeURIComponent("<<PLEASE EXPORT YOUR CHAT AND PASTE THE LINK HERE>>");
         link.target = "_new";
         subtitle.appendChild(link);
 

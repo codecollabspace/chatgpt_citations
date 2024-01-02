@@ -1,7 +1,7 @@
-# ChatGPT Citation Generator
+# ChatGPT Citations
 
 ## Overview
-The ChatGPT Citation Generator is a browser extension designed to generate BibTeX citations from chat conversations in OpenAI's ChatGPT interface. This tool aims to assist students, researchers, and anyone who needs to cite conversations or information obtained from ChatGPT in their academic or professional work.
+The ChatGPT Citations is a browser extension designed to generate BibTeX citations from chat conversations in OpenAI's ChatGPT interface. This tool aims to assist students, researchers, and anyone who needs to cite conversations or information obtained from ChatGPT in their academic or professional work.
 
 ## Features
 - Extracts user prompts from ChatGPT chat sessions.
@@ -9,24 +9,8 @@ The ChatGPT Citation Generator is a browser extension designed to generate BibTe
 - Easy to use with a simple click-to-generate functionality.
 
 ## Installation
-## Firefox
-
-1. Download the repository as an archive
-2. Extract the archive
-3. In Firefox, go to `about:debugging#/runtime/this-firefox`
-4. Click on "Load Temporary Add-on"
-5. Navigate to where you've extracted the archive to
-6. Select `manifest.json`
-
-## Chrome
-
-1. Download the repository as an archive
-2. Extract the archive
-3. Go to `chrome://extensions/`
-4. At the top right, turn on Developer mode
-5. At the top left, click on `Load unpacked`
-6. Navigate to where you've extracted the archive to
-7. Select `manifest.json`
+- (Chrome)[https://chromewebstore.google.com/detail/chatgpt-citation-generato/jgojgjlkjbjllniaeomafkjmcbmofbid]
+- (Firefox)[https://addons.mozilla.org/en-US/firefox/addon/chatgpt-citation-generator/]
 
 # Usage
 
