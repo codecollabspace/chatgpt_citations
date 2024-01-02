@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "ChatGPT Citation Generator",
+  "name": "ChatGPT Citations",
   "version": "1",
   "description": "Generates BibLaTeX citations from chat conversations with OpenAI's ChatGPT.",
   "icons": {
