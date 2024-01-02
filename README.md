@@ -1,7 +1,6 @@
 # ChatGPT Citations
 
-## Overview
-The ChatGPT Citations is a browser extension designed to generate BibTeX citations from chat conversations in OpenAI's ChatGPT interface. This tool aims to assist students, researchers, and anyone who needs to cite conversations or information obtained from ChatGPT in their academic or professional work.
+ChatGPT Citations is a browser extension designed to generate BibTeX citations from chat conversations in OpenAI's ChatGPT interface. This tool aims to assist students, researchers, and anyone who needs to cite conversations or information obtained from ChatGPT in their academic or professional work.
 
 ## Features
 - Extracts user prompts from ChatGPT chat sessions.
