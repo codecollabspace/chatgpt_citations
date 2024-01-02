@@ -9,8 +9,8 @@ The ChatGPT Citations is a browser extension designed to generate BibTeX citatio
 - Easy to use with a simple click-to-generate functionality.
 
 ## Installation
-- (Chrome)[https://chromewebstore.google.com/detail/chatgpt-citation-generato/jgojgjlkjbjllniaeomafkjmcbmofbid]
-- (Firefox)[https://addons.mozilla.org/en-US/firefox/addon/chatgpt-citation-generator/]
+- [Chrome](https://chromewebstore.google.com/detail/chatgpt-citation-generato/jgojgjlkjbjllniaeomafkjmcbmofbid)
+- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/chatgpt-citation-generator/)
 
 # Usage
 
