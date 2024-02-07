@@ -113,19 +113,21 @@ function generateBibTeX(data) {
  * @returns {string} the GPT version used in the chat
  */
 function getGPTver() {
-    let titleBar = document.querySelector('div[class="sticky top-0 mb-1.5 flex items-center justify-between z-10 h-14 bg-white p-2 font-semibold dark:bg-gray-800"]');
-
-    let gptVer = titleBar.children[1].children[0].children[0].innerText;
-
-    if (!gptVer) {
-        let gptName = document.querySelector('div[class="group flex cursor-pointer items-center gap-1 rounded-xl py-2 px-3 text-lg font-medium hover:bg-gray-50 radix-state-open:bg-gray-50 dark:hover:bg-black/10 dark:radix-state-open:bg-black/20"]');
-
-        return gptName.innerText;
+    let chatGPTInfo = document.querySelector('.group.flex.cursor-pointer.items-center .text-token-text-secondary');
+    
+    if (chatGPTInfo) {
+        chatGPTInfo = chatGPTInfo.parentNode.textContent.trim();
+    } else {
+        // Using custom gpt
+        chatGPTInfo = document.querySelector('.group.flex.cursor-pointer.items-center');
+        if (chatGPTInfo) {
+            chatGPTInfo = chatGPTInfo.childNodes[0].textContent.trim();
+        } else {
+            chatGPTInfo = '';
+        }
     }
-
-    return gptVer
+    return chatGPTInfo;
 }
-
 /**
  * Returns the authors of the chat
  * @returns  the authors of the chat
@@ -133,25 +135,19 @@ function getGPTver() {
 function getAuthors() {
     const gptVer = getGPTver();
 
+    const gptVersions = {
+        "ChatGPT 3.5": "OpenAI gpt-3.5",
+        "ChatGPT 4": "OpenAI gpt-4",
+        "ChatGPT 4 Plugins": "OpenAI gpt-4-plugins"
+    };
+
+    console.log(gptVer);
+
     if (!gptVer) {
         return "OpenAI ChatGPT";
     }
 
-    if (gptVer == "ChatGPT Plugins") {
-        return "OpenAI gpt-4-plugins"
-    }
-
-    if (gptVer == "ChatGPT 4") {
-        return "OpenAI gpt-4"
-    }
-
-    if (gptVer == "ChatGPT 3.5") {
-        return "OpenAI gpt-3.5"
-    }
-
-
-
-    return "OpenAI CustomGPT gpt-4 " + gptVer.replaceAll(" ", "-").toLowerCase();
+    return gptVersions[gptVer] || `OpenAI CustomGPT gpt-4 ${gptVer.replaceAll(" ", "-").toLowerCase()}`;
 }
 
 /**

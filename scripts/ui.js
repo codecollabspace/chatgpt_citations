@@ -148,7 +148,7 @@ function insertCitations() {
         citation.style = "opacity: 1; transform: none;";
 
         citation.innerHTML = `
-        <button class="btn relative btn-neutral group w-full whitespace-nowrap rounded-xl px-4 py-3 text-left text-gray-700 dark:text-gray-300 md:whitespace-normal" as="button">
+        <button class="btn relative btn-neutral group w-full whitespace-nowrap rounded-xl px-4 py-3 text-left text-white-700 dark:text-white-300 md:whitespace-normal" as="button">
             <div class="flex w-full gap-2 items-center justify-center">
                 <div class="flex w-full items-center justify-between">
                     <div class="flex flex-col overflow-hidden">
