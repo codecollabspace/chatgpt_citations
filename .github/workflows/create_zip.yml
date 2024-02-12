@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-      - chrome
-      - firefox
-    paths-ignore:
-      - '*.zip'
 
 jobs:
   build:
@@ -30,7 +26,7 @@ jobs:
         path: ${{ matrix.browser }}
 
     - name: Copy scripts and icons from main branch to ${{ matrix.browser }} branch
-      run: cp -r temp/scripts ${{ matrix.browser }} && cp -r temp/icons ${{ matrix.browser }}
+      run: cp -r temp/scripts ${{ matrix.browser }} && cp -r temp/icons ${{ matrix.browser }} && cp temp/manifest.json ${{ matrix.browser }}
 
     - name: Create zip file with ${{ matrix.browser }} branch contents
       run: cd ${{ matrix.browser }} && zip -r ${{ matrix.browser }}.zip *
