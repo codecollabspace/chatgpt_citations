@@ -141,8 +141,6 @@ function getAuthors() {
         "ChatGPT 4 Plugins": "OpenAI gpt-4-plugins"
     };
 
-    console.log(gptVer);
-
     if (!gptVer) {
         return "OpenAI ChatGPT";
     }
