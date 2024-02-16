@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT Citations",
+  "version": "1.1",
+  "description": "Generates BibLaTeX citations from chat conversations with OpenAI's ChatGPT.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.openai.com/", "https://chat.openai.com/*"],
+      "js": [
+        "scripts/utils.js",
+        "scripts/api.js",
+        "scripts/ui.js",
+        "scripts/main.js"
+      ]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{9af8e1a2-6c2b-4d75-aeb2-c4d34d8f5a7c}"
+    }
+  }
+}
