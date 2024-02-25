@@ -114,12 +114,12 @@ function generateBibTeX(data) {
  */
 function getGPTver() {
     let chatGPTInfo = document.querySelector('.group.flex.cursor-pointer.items-center .text-token-text-secondary');
-    
+
     if (chatGPTInfo) {
         chatGPTInfo = chatGPTInfo.parentNode.textContent.trim();
     } else {
         // Using custom gpt
-        chatGPTInfo = document.querySelector('.group.flex.cursor-pointer.items-center');
+        chatGPTInfo = document.querySelector("#citations-chat > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div > div > div.sticky.top-0.mb-1\\.5.flex.items-center.justify-between.z-10.h-14.p-2.font-semibold.bg-token-main-surface-primary").children[1];
         if (chatGPTInfo) {
             chatGPTInfo = chatGPTInfo.childNodes[0].textContent.trim();
         } else {
